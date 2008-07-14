@@ -13,6 +13,7 @@ namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
+/*
 	//std::string *path = new std::string();
 	std::string path;
 	std::string templateType;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
 	{
 		std::cout << e.what() << "\n";
     }
-/*
+*/
 	if( argc > 1 )
 	{
 		if( std::string(argv[1]) == "help" || 
@@ -147,5 +148,4 @@ int main(int argc, char *argv[])
 		std::cerr << "usage: " << argv[0] << " [path] [templateType] [target]" << std::endl << std::endl;
 		std::cerr << "usage: " << argv[0] << " help [path|templatetype|target] for more inforamtion" << std::endl;
 	}
-*/
 }
