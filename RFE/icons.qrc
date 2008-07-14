@@ -1,0 +1,16 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+</qresource>
+<qresource prefix="icons">
+	<file alias="up.png">images/up.png</file>
+	<file alias="down.png">images/down.png</file>
+	<file alias="add.png">images/add.png</file>
+	<file alias="rem.png">images/rem.png</file>
+	<file alias="group.png">images/group.png</file>
+	<file alias="group_add.png">images/group_add.png</file>
+	<file alias="open.png">images/open.png</file>
+	<file alias="load.png">images/load.png</file>
+	<file alias="save.png">images/save.png</file>
+	<file alias="exit.png">images/exit.png</file>
+</qresource>
+</RCC>
