@@ -6,22 +6,21 @@
 
 namespace bfs = boost::filesystem;
 
-void addToIncludeList(include_list &l, std::string &toAdd);
+void addToIncludeList(includeList &l, std::string &toAdd);
 
-void get_all_includes(char *path, file_list &h_files, file_list &cpp_files, include_list &includes)
+void get_all_includes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes)
 {
 	bfs::path initial_path = bfs::system_complete( bfs::path( path, bfs::native ) );
 
-	//include_list includes;
+	//includeList includes;
 
-	for(file_list::iterator it = h_files.begin(); it != h_files.end(); it++)
+	for(fileList::iterator it = h_files.begin(); it != h_files.end(); it++)
 	{
 		//std::cout << (initial_path / *it ).string() << std::endl;
 
-		std::ifstream file;
-		file.open( (initial_path / *it ).string().c_str(), std::ifstream::in );
+		std::ifstream file( (initial_path / *it ).string().c_str());
 
-		while(file.good())
+		while(file)
 		{
 			std::string line;
 			std::getline(file, line);
@@ -31,11 +30,9 @@ void get_all_includes(char *path, file_list &h_files, file_list &cpp_files, incl
 				addToIncludeList(includes, line);
 			}
 		}
-
-		file.close();
 	}
 
-	for(file_list::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
+	for(fileList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
 	{
 		//std::cout << (initial_path / *it ).string() << std::endl;
 
@@ -57,9 +54,9 @@ void get_all_includes(char *path, file_list &h_files, file_list &cpp_files, incl
 	}
 }
 
-void addToIncludeList(include_list &l, std::string &toAdd)
+void addToIncludeList(includeList &l, std::string &toAdd)
 {
-	include_list::iterator result = std::find(l.begin(), l.end(), toAdd);
+	includeList::iterator result = std::find(l.begin(), l.end(), toAdd);
 
 	if( result == l.end() )
 	{

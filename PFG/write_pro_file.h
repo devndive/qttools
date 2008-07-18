@@ -2,9 +2,9 @@
 #define __WRITE_PRO_FILE_H__
 
 #include <string>
-
+#include <iostream>
 #include "definitions.h"
 
-void write_pro_file(file_list &h_files, file_list &cpp_files, file_list &qrc_files, file_list &uic_files, path_list &depend_paths, std::string &modules, std::string &templateType, std::string &target);
+void write_pro_file(fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths, std::string &modules, std::string &templateType, std::string &target, std::streambuf *sbuf);
 
 #endif // __WRITE_PRO_FILE_H__

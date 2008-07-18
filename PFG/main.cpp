@@ -5,6 +5,7 @@
 #include "get_modules_string.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <exception>
 
@@ -13,49 +14,77 @@ namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
-/*
-	//std::string *path = new std::string();
-	std::string path;
-	std::string templateType;
-	std::string target;
-	//std::string *target = new std::string();
+	std::string path, appName, outputFile, templateType;
+	std::streambuf* sbuf;
 
 	try
 	{
-		po::options_description general("General options");
+		po::options_description general("General options", 76);
 		general.add_options()
-			("help,h", "help")
+			("help,h", "this help message")
 			("path,p", po::value<std::string>(&path)->default_value("."), "location of project")
-			("name,n", po::value<std::string>(&target)->default_value("Default App"), "application name")
+			("name,n", po::value<std::string>(&appName)->default_value("Default App"), "application name")
+			("output-file,o", po::value<std::string>(&outputFile)->default_value(""), "name of output file, if omitted the standard output is used")
+			("template-type,t", po::value<std::string>(&templateType)->default_value("app"), "templatetypes:\n\n"
+					" app \t(default) Creates a Makefile to build an application.\n"
+					" lib \tCreates a Makefile to build a library.\n"
+					" sub \tCreates a Makefile containing rules for the subdirectories specified using the SUBDIRS variable. Each subdirectory must contain its own project file.\n"
+					" vca \tCreates a Visual Studio Project file to build an application.\n"
+					" vcl \tCreates a Visual Studio Project file to build a library.")
 		;
-
-		po::options_description templatetype("Templatetype options");
-		templatetype.add_options()
-			("app", "Creates a Makefile to build an application")
-			("lib", "Creates a Makefile to build a library")
-			("subdirs", "Creates a Makefile containing rules for the subdirectories specified using the SUBDIRS variable. Each subdirectory must contain its own project file")
-			("vcapp", "Creates a Visual Studio Project file to build an application")
-			("vclib", "Creates a Visual Studio Project file to build a library")
-		;
-
-		po::options_description all("Allowed Options");
-		all.add(general).add(templatetype);
 
 		po::variables_map vm;
-		po::store(po::parse_command_line(argc, argv, all), vm);
-		//po::notify(vm);
+		po::store(po::parse_command_line(argc, argv, general), vm);
+		po::notify(vm);
 
 		if( vm.count("help") )
 		{
-			std::cout << all;
+			std::cout << general;
 			return(0);
 		}
+
+		std::ofstream outputFile;
+		if( vm.count("output-file") )
+		{
+			if( vm["output-file"].as<std::string>().empty() )
+			{
+				sbuf = std::cout.rdbuf();
+			}
+			else
+			{
+				outputFile.open(vm["output-file"].as<std::string>().c_str(), std::ofstream::out);
+				sbuf = outputFile.rdbuf();
+			}
+		}
+
+		if( vm.count("template-type") )
+		{
+			if( templateType != "app" && templateType != "lib" && templateType != "sub" && templateType != "vca" && templateType != "vcl" )
+			{
+				std::cerr << "ERROR: incorrect template type. Use app|lib|sub|vca|vcl!" << std::endl;
+				std::cerr << "Try " << argv[0] << " --help for mor information on template types" << std::endl;
+				return(0);
+			}
+
+			if( templateType == "vca" ) templateType = "vcapp";
+			if( templateType == "vcl" ) templateType = "vclib";
+		}
+
+		fileList hFiles, cppFiles, qrcFiles, uicFiles;
+		pathList dependPaths;
+		includeList includes;
+
+		get_all_files(path, hFiles, cppFiles, qrcFiles, uicFiles, dependPaths);
+		get_all_includes(path, hFiles, cppFiles, includes);
+		std::string moduleString = get_modules_string(includes);
+		write_pro_file(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleString, templateType, appName, sbuf);
     }
 	catch(std::exception& e)
 	{
 		std::cout << e.what() << "\n";
     }
-*/
+
+/*
 	if( argc > 1 )
 	{
 		if( std::string(argv[1]) == "help" || 
@@ -130,9 +159,9 @@ int main(int argc, char *argv[])
 				target = argv[3];
 			}
 
-			file_list h_files, cpp_files, qrc_files, uic_files;
-			path_list depend_paths;
-			include_list includes;
+			fileList h_files, cpp_files, qrc_files, uic_files;
+			pathList depend_paths;
+			includeList includes;
 
 			get_all_files(argv[1], h_files, cpp_files, qrc_files, uic_files, depend_paths);
 
@@ -148,4 +177,5 @@ int main(int argc, char *argv[])
 		std::cerr << "usage: " << argv[0] << " [path] [templateType] [target]" << std::endl << std::endl;
 		std::cerr << "usage: " << argv[0] << " help [path|templatetype|target] for more inforamtion" << std::endl;
 	}
+*/
 }

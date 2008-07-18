@@ -1,8 +1,9 @@
 #ifndef __GET_ALL_FILES_H__
 #define __GET_ALL_FILES_H__
 
+#include <string>
 #include "definitions.h"
 
-void get_all_files(char *path, file_list &h_files, file_list &cpp_files, file_list &qrc_files, file_list &uic_files, path_list &depend_paths);
+void get_all_files(std::string &path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths);
 
 #endif // __GET_ALL_FILES_H__

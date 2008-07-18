@@ -5,10 +5,10 @@
 
 namespace bfs = boost::filesystem;
 
-int get_all_files_rec(bfs::path&, bfs::path&, file_list&, file_list&, file_list&, file_list&, path_list&);
-void addToPathList(path_list &list, std::string &toAdd);
+int get_all_files_rec(bfs::path&, bfs::path&, fileList&, fileList&, fileList&, fileList&, pathList&);
+void addToPathList(pathList &list, std::string &toAdd);
 
-void get_all_files(char *path, file_list &h_files, file_list &cpp_files, file_list &qrc_files, file_list &uic_files, path_list &depend_paths)
+void get_all_files(std::string &path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths)
 {
 	bfs::path initial_path( bfs::initial_path<bfs::path>() );
 
@@ -16,7 +16,7 @@ void get_all_files(char *path, file_list &h_files, file_list &cpp_files, file_li
 	get_all_files_rec(initial_path, initial_path, h_files, cpp_files, qrc_files, uic_files, depend_paths);
 }
 
-int get_all_files_rec(bfs::path &full_path, bfs::path &initial_path, file_list &h_files, file_list &cpp_files, file_list &qrc_files, file_list &uic_files, path_list &depend_paths)
+int get_all_files_rec(bfs::path &full_path, bfs::path &initial_path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths)
 {
 	if ( !bfs::exists( full_path ) )
 	{
@@ -114,9 +114,9 @@ int get_all_files_rec(bfs::path &full_path, bfs::path &initial_path, file_list &
 	return(0);
 }
 
-void addToPathList(path_list &l, std::string &toAdd)
+void addToPathList(pathList &l, std::string &toAdd)
 {
-	path_list::iterator result = std::find(l.begin(), l.end(), toAdd);
+	pathList::iterator result = std::find(l.begin(), l.end(), toAdd);
 
 	if( result == l.end() )
 	{
