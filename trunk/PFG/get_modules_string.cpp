@@ -5,21 +5,20 @@
 
 typedef std::vector< std::string > module_list;
 
-void addToModuleList(module_list &l, std::string &toAdd);
+void addToModuleList(module_list &l, const std::string &toAdd);
 
-std::string get_modules_string(include_list &includes)
+std::string get_modules_string(includeList &includes)
 {
 	module_list modules;
 	std::string module_string;
 
-	for(include_list::iterator it = includes.begin(); it != includes.end(); it++)
+	for(includeList::iterator it = includes.begin(); it != includes.end(); it++)
 	{
 		//std::cout << *it << std::endl;
 
-		size_t pos1, pos2;
 		std::string qtInclude;
 
-		pos1 = (*it).find("\"");
+		size_t pos1 = (*it).find("\"");
 		if( pos1 != std::string::npos )
 		{
 			//std::cout << "found \" at pos (" << pos1 << ")" << std::endl;
@@ -29,7 +28,7 @@ std::string get_modules_string(include_list &includes)
 			qtInclude = (*it).substr( pos1 + 1, last - pos1 - 1 );
 		}
 
-		pos2 = (*it).find("<");
+		size_t pos2 = (*it).find("<");
 		if( pos2 != std::string::npos )
 		{
 			//std::cout << "found < at pos (" << pos2 << ")" << std::endl;
@@ -93,9 +92,9 @@ std::string get_modules_string(include_list &includes)
 	return( module_string );
 }
 
-void addToModuleList(module_list &l, std::string &toAdd)
+void addToModuleList(module_list &l, const std::string &toAdd)
 {
-	include_list::iterator result = std::find(l.begin(), l.end(), toAdd);
+	includeList::iterator result = std::find(l.begin(), l.end(), toAdd);
 
 	if( result == l.end() )
 	{

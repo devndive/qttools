@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-typedef std::vector< std::string > file_list;
-typedef std::vector< std::string > path_list;
-typedef std::vector< std::string > include_list;
+typedef std::vector< std::string > fileList;
+typedef std::vector< std::string > pathList;
+typedef std::vector< std::string > includeList;
 
 #endif // __DEFINITIONS_H__
