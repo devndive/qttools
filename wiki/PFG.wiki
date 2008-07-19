@@ -1,0 +1,3 @@
+==Introduction==
+
+To compile the PFG you need at least [http://www.boost.org Boost v. 1.34.1] . It has to linked against boost_filesystem and boost_program_options.
