@@ -21,8 +21,8 @@ private:
 
 	void setupLayout();
 	QString supportedImageFormats();
-	void addNewItem(QString&, QString&);
-	void addNewGroup(QString&);
+	void addNewItem(const QString&, const QString&);
+	void addNewGroup(const QString&);
 
 private slots:
 	void onSelectResource();
