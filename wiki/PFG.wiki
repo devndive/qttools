@@ -1,3 +1,26 @@
-==Introduction==
+==Dependencies==
 
-To compile the PFG you need at least [http://www.boost.org Boost v. 1.34.1] . It has to linked against boost_filesystem and boost_program_options.
+To compile the PFG you need at least [http://www.boost.org Boost v. 1.34.1] . It has to linked against boost_filesystem and boost_program_options. There are no other dependencies.
+
+To compile with the g++ the command could look like
+  * g++ -L /usr/lib/ -lboost_program_options -lboost_filesystem -o PFG *.cpp
+
+==Usage==
+|| *option* || *description* ||
+||-h [ --help ] || this help message || ||
+||-p [ --path ] arg || location of project || Default: . ||
+||-n [ --name ] arg || application name || Default: Default App ||
+||-o [ --output-file ] arg || name of output file, if omitted the standard output is used || ||
+||-t [ --template-type ] arg || || Default: app ||
+|| || templatetypes: || ||     
+|| ||app || Creates a Makefile to build an application. ||
+|| ||lib || Creates a Makefile to build a library. ||
+|| ||sub || Creates a Makefile containing rules for the subdirectories specified using the SUBDIRS variable. Each subdirectory must contain its own project file. ||
+|| ||vca || Creates a Visual Studio Project file to build an application. ||
+|| ||vcl || Creates a Visual Studio Project file to build a library. ||
+
+e.g:
+PFG -p ~/workspace/qttools/RFE -n RFE -o ~/workspace/qttools/RFE.pro
+
+will create a project file (-o ~/workspace/qttools/RFE.pro) for the project in ~/workspace/qttools/RFE
+PFG will recursevly find all .cpp, .h, .qrc and .uic files. Then the .cpp and .h files will be scanned for all #include's. These includes will be checked against Qt include files. Depending on the included files the corresponding modules are added to the .pro file (e.g. QT += xml network)
