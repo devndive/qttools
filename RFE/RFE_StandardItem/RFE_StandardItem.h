@@ -17,7 +17,7 @@ public:
 	StandardItem( const QIcon & icon, const QString & text );
 	StandardItem( int rows, int columns = 1 );
 
-	void setPath(QString &p) { path = p; }
+	void setPath(const QString &p) { path = p; }
 	QString getPath() { return path; }
 };
 

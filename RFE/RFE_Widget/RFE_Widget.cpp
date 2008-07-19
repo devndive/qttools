@@ -100,7 +100,7 @@ void Widget::addNewGroup()
 	}
 }
 
-void Widget::addNewGroup(QString &groupName)
+void Widget::addNewGroup(const QString &groupName)
 {
 	if(modelView->rowCount() == 0)
 	{
@@ -140,7 +140,7 @@ void Widget::addNewItem()
 	}
 }
 
-void Widget::addNewItem(QString &resourceName, QString &resourcePath)
+void Widget::addNewItem(const QString &resourceName, const QString &resourcePath)
 {
 	if(treeView->currentIndex().row() != -1)
 	{
@@ -260,7 +260,7 @@ void Widget::loadResourceFile()
 					if( line.indexOf( "<qresource>" ) >= 0 )
 					{
 						// add default group
-						addNewGroup(tr("default"));
+						addNewGroup(QString("default"));
 					}
 
 					if( line.indexOf( "<qresource prefix=\"" ) >= 0 )
