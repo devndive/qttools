@@ -1,4 +1,4 @@
-= Introduction =
+==Introduction==
 .pro File for the Resource File Editor. Copy to a file RFE.pro and call qmake to create a project file for your favourite IDE / programming enviornment.
 
 {{{
@@ -18,3 +18,5 @@ SOURCES = main.cpp \
           RFE_StandardItem/RFE_StandardItem.cpp \
           RFE_Widget/RFE_Widget.cpp
 }}}
+
+The RFE has been compiled, linked and tested against Qt 4.3 and 4.4
