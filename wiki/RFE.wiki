@@ -1,3 +1,4 @@
+#labels Featured
 ==Introduction==
 .pro File for the Resource File Editor. Copy to a file RFE.pro and call qmake to create a project file for your favourite IDE / programming enviornment.
 
