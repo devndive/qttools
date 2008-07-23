@@ -8,14 +8,11 @@ typedef std::vector< std::string > module_list;
 namespace PFG
 {
 
-void addToModuleList(module_list &l, const std::string &toAdd);
+//void addToModuleList(module_list &l, const std::string &toAdd);
 
-std::string getModulesString(includeList &includes)
+void getModules(stringList &includes, stringList &modules)
 {
-	module_list modules;
-	std::string module_string;
-
-	for(includeList::iterator it = includes.begin(); it != includes.end(); it++)
+	for(stringList::iterator it = includes.begin(); it != includes.end(); it++)
 	{
 		//std::cout << *it << std::endl;
 
@@ -47,7 +44,7 @@ std::string getModulesString(includeList &includes)
 			qtInclude.find("QDom") != std::string::npos ||
 			qtInclude.find("QXml") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("xml"));
+			addToStringList(modules, std::string("+xml"));
 		}
 		else if( qtInclude.find("QtNetwork") != std::string::npos ||
 			qtInclude.find("QAbstractSocket") != std::string::npos ||
@@ -62,39 +59,41 @@ std::string getModulesString(includeList &includes)
 			qtInclude.find("QUdp") != std::string::npos ||
 			qtInclude.find("QUrl") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("network"));
+			addToStringList(modules, std::string("+network"));
 		}
 		else if(qtInclude.find("QtOpenGL") != std::string::npos ||
 			qtInclude.find("QGL") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("opengl"));
+			addToStringList(modules, std::string("+opengl"));
 		}
 		else if( qtInclude.find("Q3") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("qt3support"));
+			addToStringList(modules, std::string("+qt3support"));
 		}
 		else if(qtInclude.find("QtSql") != std::string::npos ||
 			qtInclude.find("QSql") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("sql"));
+			addToStringList(modules, std::string("+sql"));
 		}
 		else if(qtInclude.find("QtSvg") != std::string::npos ||
 			qtInclude.find("QGraphics") != std::string::npos ||
 			qtInclude.find("QSvg") != std::string::npos )
 		{
-			addToModuleList(modules, std::string("svg"));
+			addToStringList(modules, std::string("+svg"));
 		}
 	}
 
+	/*
 	for(module_list::iterator it = modules.begin(); it != modules.end(); it++)
 	{
 		module_string.append( *it );
 		module_string.append( " " );
 	}
+	*/
 
-	return( module_string );
+	//return( module_string );
 }
-
+/*
 void addToModuleList(module_list &l, const std::string &toAdd)
 {
 	includeList::iterator result = std::find(l.begin(), l.end(), toAdd);
@@ -104,6 +103,6 @@ void addToModuleList(module_list &l, const std::string &toAdd)
 		l.push_back(toAdd);
 	}
 }
-
+*/
 } // namespace PFG
 

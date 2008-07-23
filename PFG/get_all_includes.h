@@ -7,7 +7,7 @@
 namespace PFG
 {
 
-void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes);
+void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_files, stringList &includes);
 
 } // namespace PFG
 

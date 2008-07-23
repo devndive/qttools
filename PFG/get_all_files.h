@@ -7,7 +7,7 @@
 namespace PFG
 {
 
-void getAllFiles(const std::string &path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths);
+void getAllFiles(const std::string &path, stringList &hFiles, stringList &cppFiles, stringList &qrcFiles, stringList &uicFiles, stringList &dependPaths);
 
 } // namespace PFG
 

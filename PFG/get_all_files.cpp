@@ -8,18 +8,18 @@ namespace bfs = boost::filesystem;
 namespace PFG
 {
 
-int getAllFilesRec(const bfs::path&, bfs::path&, fileList&, fileList&, fileList&, fileList&, pathList&);
-void addToPathList(pathList &list, const std::string &toAdd);
+int getAllFilesRec(const bfs::path&, bfs::path&, stringList&, stringList&, stringList&, stringList&, stringList&);
+//void addToPathList(pathList &list, const std::string &toAdd);
 
-void getAllFiles(const std::string &path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths)
+void getAllFiles(const std::string &path, stringList &hFiles, stringList &cppFiles, stringList &qrcFiles, stringList &uicFiles, stringList &dependPaths)
 {
-	bfs::path initial_path( bfs::initial_path<bfs::path>() );
+	bfs::path initialPath( bfs::initial_path<bfs::path>() );
 
-	initial_path = bfs::system_complete( bfs::path( path, bfs::native ) );
-	getAllFilesRec(initial_path, initial_path, h_files, cpp_files, qrc_files, uic_files, depend_paths);
+	initialPath = bfs::system_complete( bfs::path( path, bfs::native ) );
+	getAllFilesRec(initialPath, initialPath, hFiles, cppFiles, qrcFiles, uicFiles, dependPaths);
 }
 
-int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths)
+int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, stringList &h_files, stringList &cpp_files, stringList &qrc_files, stringList &uic_files, stringList &depend_paths)
 {
 	if ( !bfs::exists( full_path ) )
 	{
@@ -59,7 +59,7 @@ int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList
 
 							if(filepath != filename)
 							{
-								addToPathList(depend_paths, filepath);
+								addToStringList(depend_paths, filepath);
 							}
 						}
 					}
@@ -72,7 +72,7 @@ int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList
 						//std::cout << "filepath: " << filepath << std::endl;
 						if(filepath != filename)
 						{
-							addToPathList(depend_paths, filepath);
+							addToStringList(depend_paths, filepath);
 						}
 						//}
 					}
@@ -85,7 +85,7 @@ int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList
 						//std::cout << "filepath: " << filepath << std::endl;
 						if(filepath != filename)
 						{
-							addToPathList(depend_paths, filepath);
+							addToStringList(depend_paths, filepath);
 						}
 						//}					
 					}
@@ -94,7 +94,7 @@ int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList
 						uic_files.push_back( relative );
 						if( filepath != filename)
 						{
-							addToPathList(depend_paths, filepath);
+							addToStringList(depend_paths, filepath);
 						}
 					}
 				}
@@ -116,7 +116,7 @@ int getAllFilesRec(const bfs::path &full_path, bfs::path &initial_path, fileList
 
 	return(0);
 }
-
+/*
 void addToPathList(pathList &l, const std::string &toAdd)
 {
 	pathList::iterator result = std::find(l.begin(), l.end(), toAdd);
@@ -126,6 +126,6 @@ void addToPathList(pathList &l, const std::string &toAdd)
 		l.push_back(toAdd);
 	}
 }
-
+*/
 } // namespace PFG
 

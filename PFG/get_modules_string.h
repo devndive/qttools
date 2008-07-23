@@ -7,7 +7,7 @@
 namespace PFG
 {
 
-std::string getModulesString(includeList &includes);
+void getModules(stringList &includes, stringList &modules);
 
 } // namespace PFG
 
