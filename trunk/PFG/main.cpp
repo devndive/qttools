@@ -2,7 +2,7 @@
 #include "get_all_files.h"
 #include "get_all_includes.h"
 #include "write_pro_file.h"
-#include "get_modules_string.h"
+#include "get_modules.h"
 
 #include <iostream>
 #include <fstream>
