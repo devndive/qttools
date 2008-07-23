@@ -4,8 +4,13 @@
 #include <vector>
 #include <string>
 
+namespace PFG
+{
+
 typedef std::vector< std::string > fileList;
 typedef std::vector< std::string > pathList;
 typedef std::vector< std::string > includeList;
+
+}
 
 #endif // __DEFINITIONS_H__

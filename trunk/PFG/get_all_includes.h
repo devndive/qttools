@@ -4,6 +4,12 @@
 #include <string>
 #include "definitions.h"
 
-void get_all_includes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes);
+namespace PFG
+{
+
+void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes);
+
+} // namespace PFG
 
 #endif // __GET_ALL_INCLUDES_H__
+

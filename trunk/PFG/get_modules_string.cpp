@@ -5,9 +5,12 @@
 
 typedef std::vector< std::string > module_list;
 
+namespace PFG
+{
+
 void addToModuleList(module_list &l, const std::string &toAdd);
 
-std::string get_modules_string(includeList &includes)
+std::string getModulesString(includeList &includes)
 {
 	module_list modules;
 	std::string module_string;
@@ -102,11 +105,5 @@ void addToModuleList(module_list &l, const std::string &toAdd)
 	}
 }
 
-
-
-
-
-			
-
-
+} // namespace PFG
 
