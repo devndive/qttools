@@ -6,7 +6,7 @@
 namespace PFG
 {
 
-void writeProFile(stringList &h_files, stringList &cpp_files, stringList &qrc_files, stringList &uic_files, stringList &depend_paths, stringList &modules, std::string &templateType, std::string &target, std::streambuf *sbuf)
+void writeProFile(stringList &h_files, stringList &cpp_files, stringList &qrc_files, stringList &uic_files, stringList &depend_paths, stringList &modules, std::string &templateType, std::string &target, std::streambuf *sbuf, stringList &libDirs, stringList &libs)
 {
 	std::ostream output(sbuf);
 
@@ -60,6 +60,23 @@ void writeProFile(stringList &h_files, stringList &cpp_files, stringList &qrc_fi
 				output << "QT -=" << qt_sub << std::endl;
 			}
 			//output << "QT += " << modules << std::endl;
+		}
+
+		if( !libDirs.empty() || !libs.empty() )
+		{
+			output << "LIBS +=";
+
+			for(stringList::iterator it = libDirs.begin(); it != libDirs.end(); it++)
+			{
+				output << " -L" << *it;
+			}
+
+			for(stringList::iterator it = libs.begin(); it != libs.end(); it++)
+			{
+				output << " -l" << *it;
+			}
+
+			output << std::endl;
 		}
 
 		if( !qrc_files.empty() )
