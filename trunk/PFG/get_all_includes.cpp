@@ -9,15 +9,15 @@ namespace bfs = boost::filesystem;
 namespace PFG
 {
 
-void addToIncludeList(includeList &l, std::string &toAdd);
+//void addToIncludeList(includeList &l, std::string &toAdd);
 
-void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes)
+void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_files, stringList &includes)
 {
 	bfs::path initial_path = bfs::system_complete( bfs::path( path, bfs::native ) );
 
 	//includeList includes;
 
-	for(fileList::iterator it = h_files.begin(); it != h_files.end(); it++)
+	for(stringList::iterator it = h_files.begin(); it != h_files.end(); it++)
 	{
 		//std::cout << (initial_path / *it ).string() << std::endl;
 
@@ -30,12 +30,12 @@ void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, i
 
 			if( line.find("#include ") != std::string::npos && line.find("Q") != std::string::npos )
 			{
-				addToIncludeList(includes, line);
+				addToStringList(includes, line);
 			}
 		}
 	}
 
-	for(fileList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
+	for(stringList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
 	{
 		//std::cout << (initial_path / *it ).string() << std::endl;
 
@@ -49,14 +49,14 @@ void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, i
 
 			if( line.find("#include ") != std::string::npos && line.find("Q") != std::string::npos )
 			{
-				addToIncludeList(includes, line);
+				addToStringList(includes, line);
 			}
 		}
 
 		file.close();
 	}
 }
-
+/*
 void addToIncludeList(includeList &l, std::string &toAdd)
 {
 	includeList::iterator result = std::find(l.begin(), l.end(), toAdd);
@@ -66,6 +66,6 @@ void addToIncludeList(includeList &l, std::string &toAdd)
 		l.push_back(toAdd);
 	}
 }
-
+*/
 } // namespace PFG
 

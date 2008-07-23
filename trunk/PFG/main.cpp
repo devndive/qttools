@@ -12,12 +12,6 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-/*
-std::pair< std::string, std::string > parse_qt(const std::string &s)
-{
-}
-*/
-
 int main(int argc, char *argv[])
 {
 	std::string path, appName, outputFile, templateType;
@@ -38,35 +32,34 @@ int main(int argc, char *argv[])
 					" vca \tCreates a Visual Studio Project file to build an application.\n"
 					" vcl \tCreates a Visual Studio Project file to build a library.")
 		;
-/*
+
 		po::options_description modules("Module options", 76);
 		modules.add_options()
-			("qt-core", "use qt core module")
-			("qtno-core", "do not use qt core (use with caution)")
-			("qt-gui", "use qt gui module")
-			("qtno-gui", "do not use qt gui (use with caution)")
-			("qt-network", "use qt network module")
-			("qtno-network", "do not use qt network module")
-			("qt-opengl", "use qt opengl module")
-			("qtno-opengl", "do not use qt opengl module")
-			("qt-sql", "use qt sql module")
-			("qtno-sql", "do not use qt sql module")
-			("qt-svg", "use qt svg module")
-			("qtno-svg", "do not use qt svg module")
-			("qt-xml", "use qt xml module")
-			("qtno-xml", "do not use qt xml module")
-			("qt-qt3support", "use qt3support module")
-			("qtno-qt3support", "do not use qt3support module")
-			("qt-xml", "use qt xml support")
-			("qtno-xml", "do not use qt xml support")
+			("core", "use qt core module")
+			("no-core", "do not use qt core (use with caution)")
+			("gui", "use qt gui module")
+			("no-gui", "do not use qt gui (use with caution)")
+			("network", "use qt network module")
+			("no-network", "do not use qt network module")
+			("opengl", "use qt opengl module")
+			("no-opengl", "do not use qt opengl module")
+			("sql", "use qt sql module")
+			("no-sql", "do not use qt sql module")
+			("svg", "use qt svg module")
+			("no-svg", "do not use qt svg module")
+			("xml", "use qt xml module")
+			("no-xml", "do not use qt xml module")
+			("qt3support", "use qt3support module")
+			("no-qt3support", "do not use qt3support module")
+			("xml", "use qt xml support")
+			("no-xml", "do not use qt xml support")
 		;
 
 		po::options_description all("Allowed options");
 		all.add(general).add(modules);
-*/
+
 		po::variables_map vm;
-		po::store(po::parse_command_line(argc, argv, general), vm);
-		//po::store(po::command_line_parser(argc, argv).options(all).extra_parser(parse_qt).run(), vm);
+		po::store(po::parse_command_line(argc, argv, all), vm);
 		po::notify(vm);
 
 		if( vm.count("help") )
@@ -102,24 +95,42 @@ int main(int argc, char *argv[])
 			if( templateType == "vcl" ) templateType = "vclib";
 		}
 
-		if( vm.count("core") )
-		{
-			std::cout << "using qt core" << std::endl;
-		}
-
-		PFG::fileList hFiles, cppFiles, qrcFiles, uicFiles;
-		PFG::pathList dependPaths;
-		PFG::includeList includes;
+		PFG::stringList hFiles, cppFiles, qrcFiles, uicFiles, dependPaths;
+		PFG::stringList includes;
+		PFG::stringList moduleList;
 
 		PFG::getAllFiles(path, hFiles, cppFiles, qrcFiles, uicFiles, dependPaths);
+
 		PFG::getAllIncludes(path, hFiles, cppFiles, includes);
-		std::string moduleString = PFG::getModulesString(includes);
-		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleString, templateType, appName, sbuf);
+		PFG::getModules(includes, moduleList);
+
+		
+		if( vm.count("core") )
+		{
+			PFG::addToStringList(moduleList, std::string("+core"));
+		}
+
+		if( vm.count("no-core") )
+		{
+			PFG::addToStringList(moduleList, std::string("-core"));
+		}
+		
+		if( vm.count("gui") )
+		{
+			PFG::addToStringList(moduleList, std::string("+gui"));
+		}
+
+		if( vm.count("no-gui") )
+		{
+			PFG::addToStringList(moduleList, std::string("-gui"));
+		}
+
+		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleList, templateType, appName, sbuf);
     }
 	catch(std::exception& e)
 	{
 		std::cout << e.what() << "\n";
-    }
+	}
 
 /*
 	if( argc > 1 )

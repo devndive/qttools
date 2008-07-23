@@ -6,7 +6,7 @@
 namespace PFG
 {
 
-void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths, std::string &modules, std::string &templateType, std::string &target, std::streambuf *sbuf)
+void writeProFile(stringList &h_files, stringList &cpp_files, stringList &qrc_files, stringList &uic_files, stringList &depend_paths, stringList &modules, std::string &templateType, std::string &target, std::streambuf *sbuf)
 {
 	std::ostream output(sbuf);
 
@@ -18,14 +18,14 @@ void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, f
 		if( !depend_paths.empty() )
 		{
 			output << "DEPENDPATH += .";
-			for(fileList::iterator it = depend_paths.begin(); it != depend_paths.end(); it++)
+			for(stringList::iterator it = depend_paths.begin(); it != depend_paths.end(); it++)
 			{
 				output << " " << *it;
 			}
 			output << std::endl;
 
 			output << "INCLUDEPATH += .";
-			for(fileList::iterator it = depend_paths.begin(); it != depend_paths.end(); it++)
+			for(stringList::iterator it = depend_paths.begin(); it != depend_paths.end(); it++)
 			{
 				output << " " << *it;
 			}
@@ -34,13 +34,38 @@ void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, f
 
 		if( !modules.empty() )
 		{
-			output << "QT += " << modules << std::endl;
+			std::string qt_add, qt_sub;
+
+			for(stringList::iterator it = modules.begin(); it != modules.end(); it++)
+			{
+				if( (*it)[0] == '+' )
+				{
+					qt_add.append( " " );
+					qt_add.append( (*it).substr(1) );
+				}
+
+				if( (*it)[0] == '-' )
+				{
+					qt_sub.append( " " );
+					qt_sub.append( (*it).substr(1) );
+				}
+			}
+
+			if( !qt_add.empty() )
+			{
+				output << "QT +=" << qt_add << std::endl;
+			}
+			if( !qt_sub.empty() )
+			{
+				output << "QT -=" << qt_sub << std::endl;
+			}
+			//output << "QT += " << modules << std::endl;
 		}
 
 		if( !qrc_files.empty() )
 		{
 			output << "RESOURCES = " << qrc_files[0];
-			for(fileList::iterator it = qrc_files.begin()+1; it != qrc_files.end(); it++)
+			for(stringList::iterator it = qrc_files.begin()+1; it != qrc_files.end(); it++)
 			{
 				output << " \\" << std::endl;
 				output << "            " << *it;
@@ -51,7 +76,7 @@ void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, f
 		if( !h_files.empty() )
 		{
 			output << "HEADERS = " << h_files[0];
-			for(fileList::iterator it = h_files.begin()+1; it != h_files.end(); it++)
+			for(stringList::iterator it = h_files.begin()+1; it != h_files.end(); it++)
 			{
 				output << " \\" << std::endl;
 				output << "          " << *it;
@@ -62,7 +87,7 @@ void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, f
 		if( !cpp_files.empty() )
 		{
 			output << "SOURCES = " << cpp_files[0];
-			for(fileList::iterator it = cpp_files.begin()+1; it != cpp_files.end(); it++)
+			for(stringList::iterator it = cpp_files.begin()+1; it != cpp_files.end(); it++)
 			{
 				output << " \\" << std::endl;
 				output << "          " << *it;
@@ -73,7 +98,7 @@ void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, f
 		if( !uic_files.empty() )
 		{
 			output << "FORMS = " << uic_files[0];
-			for(fileList::iterator it = uic_files.begin()+1; it != uic_files.end(); it++)
+			for(stringList::iterator it = uic_files.begin()+1; it != uic_files.end(); it++)
 			{
 				output << " \\" << std::endl;
 				output << "        " << *it;
