@@ -14,15 +14,16 @@ namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
-	std::string path, appName, outputFile, templateType;
-	std::streambuf* sbuf;
-
 	try
 	{
+		std::string path, appName, outputFile, templateType, help;
+		PFG::stringList libDirs, libs;
+		std::streambuf* sbuf(std::cout.rdbuf());
+
 		po::options_description general("General options", 76);
 		general.add_options()
-			("help,h", "this help message")
-			("path,p", po::value<std::string>(&path)->default_value("."), "location of project")
+			("help,h", po::value<std::string>(&help)->default_value("all"), "help message, options are all|general|modules")
+			("input-dir,i", po::value<std::string>(&path)->default_value("."), "location of project")
 			("name,n", po::value<std::string>(&appName)->default_value("Default App"), "application name")
 			("output-file,o", po::value<std::string>(&outputFile)->default_value(""), "name of output file, if omitted the standard output is used")
 			("template-type,t", po::value<std::string>(&templateType)->default_value("app"), "templatetypes:\n\n"
@@ -31,6 +32,8 @@ int main(int argc, char *argv[])
 					" sub \tCreates a Makefile containing rules for the subdirectories specified using the SUBDIRS variable. Each subdirectory must contain its own project file.\n"
 					" vca \tCreates a Visual Studio Project file to build an application.\n"
 					" vcl \tCreates a Visual Studio Project file to build a library.")
+			("lib-dirs,L", po::value<PFG::stringList>(&libDirs), "extra library dirs")
+			("libs,l", po::value<PFG::stringList>(&libs), "extra libraries")
 		;
 
 		po::options_description modules("Module options", 76);
@@ -47,8 +50,6 @@ int main(int argc, char *argv[])
 			("no-sql", "do not use qt sql module")
 			("svg", "use qt svg module")
 			("no-svg", "do not use qt svg module")
-			("xml", "use qt xml module")
-			("no-xml", "do not use qt xml module")
 			("qt3support", "use qt3support module")
 			("no-qt3support", "do not use qt3support module")
 			("xml", "use qt xml support")
@@ -64,21 +65,33 @@ int main(int argc, char *argv[])
 
 		if( vm.count("help") )
 		{
-			std::cout << general;
+			if( help == "all" )
+				std::cout << all;
+			else if( help == "general" )
+				std::cout << general;
+			else if( help == "modules" )
+				std::cout << modules;
+			else
+				std::cout << all;
+
+			std::cout << std::endl;
+			std::cout << "For most users no module options, no libs and no lib-dirs are needed. ";
+			std::cout << "You should probably be fine with --input-dir, --name and --output-file";
+			std::cout << std::endl << std::endl;
+			std::cout << "e.g.:" << std::endl;
+			std::cout << "  PFG --input-dir ~/qttools/PFG/ --name PFG --output-file PFG.pro";
+			std::cout << std::endl << std::endl;
+
 			return(0);
 		}
 
-		std::ofstream outputFile;
+		std::ofstream outputFileStream;
 		if( vm.count("output-file") )
 		{
-			if( vm["output-file"].as<std::string>().empty() )
+			if( !vm["output-file"].as<std::string>().empty() )
 			{
-				sbuf = std::cout.rdbuf();
-			}
-			else
-			{
-				outputFile.open(vm["output-file"].as<std::string>().c_str(), std::ofstream::out);
-				sbuf = outputFile.rdbuf();
+				outputFileStream.open(vm["output-file"].as<std::string>().c_str(), std::ofstream::out);
+				sbuf = outputFileStream.rdbuf();
 			}
 		}
 
@@ -125,7 +138,67 @@ int main(int argc, char *argv[])
 			PFG::addToStringList(moduleList, std::string("-gui"));
 		}
 
-		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleList, templateType, appName, sbuf);
+		if( vm.count("network") )
+		{
+			PFG::addToStringList(moduleList, std::string("+network"));
+		}
+
+		if( vm.count("no-network") )
+		{
+			PFG::addToStringList(moduleList, std::string("-network"));
+		}
+
+		if( vm.count("opengl") )
+		{
+			PFG::addToStringList(moduleList, std::string("+opengl"));
+		}
+
+		if( vm.count("no-opengl") )
+		{
+			PFG::addToStringList(moduleList, std::string("-opengl"));
+		}
+
+		if( vm.count("sql") )
+		{
+			PFG::addToStringList(moduleList, std::string("+sql"));
+		}
+
+		if( vm.count("no-sql") )
+		{
+			PFG::addToStringList(moduleList, std::string("-sql"));
+		}
+
+		if( vm.count("svg") )
+		{
+			PFG::addToStringList(moduleList, std::string("+svg"));
+		}
+
+		if( vm.count("no-svg") )
+		{
+			PFG::addToStringList(moduleList, std::string("-svg"));
+		}
+
+		if( vm.count("qt3support") )
+		{
+			PFG::addToStringList(moduleList, std::string("+qt3support"));
+		}
+
+		if( vm.count("no-qt3support") )
+		{
+			PFG::addToStringList(moduleList, std::string("-qt3support"));
+		}
+
+		if( vm.count("xml") )
+		{
+			PFG::addToStringList(moduleList, std::string("+xml"));
+		}
+
+		if( vm.count("no-xml") )
+		{
+			PFG::addToStringList(moduleList, std::string("-xml"));
+		}
+
+		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleList, templateType, appName, sbuf, libDirs, libs);
     }
 	catch(std::exception& e)
 	{
