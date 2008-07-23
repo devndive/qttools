@@ -3,7 +3,10 @@
 
 #include <iostream>
 
-void write_pro_file(fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths, std::string &modules, std::string &templateType, std::string &target, std::streambuf *sbuf)
+namespace PFG
+{
+
+void writeProFile(fileList &h_files, fileList &cpp_files, fileList &qrc_files, fileList &uic_files, pathList &depend_paths, std::string &modules, std::string &templateType, std::string &target, std::streambuf *sbuf)
 {
 	std::ostream output(sbuf);
 
@@ -85,3 +88,6 @@ void write_pro_file(fileList &h_files, fileList &cpp_files, fileList &qrc_files,
 		output << "   in the given directory!" << std::endl;
 	}
 }
+
+} // namespace PFG
+

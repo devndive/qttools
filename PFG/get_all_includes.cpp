@@ -6,9 +6,12 @@
 
 namespace bfs = boost::filesystem;
 
+namespace PFG
+{
+
 void addToIncludeList(includeList &l, std::string &toAdd);
 
-void get_all_includes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes)
+void getAllIncludes(std::string &path, fileList &h_files, fileList &cpp_files, includeList &includes)
 {
 	bfs::path initial_path = bfs::system_complete( bfs::path( path, bfs::native ) );
 
@@ -63,3 +66,6 @@ void addToIncludeList(includeList &l, std::string &toAdd)
 		l.push_back(toAdd);
 	}
 }
+
+} // namespace PFG
+

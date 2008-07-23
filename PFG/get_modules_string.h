@@ -4,6 +4,12 @@
 #include <string>
 #include "definitions.h"
 
-std::string get_modules_string(includeList &includes);
+namespace PFG
+{
+
+std::string getModulesString(includeList &includes);
+
+} // namespace PFG
 
 #endif // __GET_MODULES_STRING_H__
+
