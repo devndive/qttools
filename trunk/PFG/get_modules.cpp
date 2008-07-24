@@ -1,17 +1,23 @@
-#include "get_modules.h"
-
 #include <vector>
 #include <algorithm>
+
+#include "get_modules.h"
+#include "create_module_vector.h"
+
+//#include <QtNetwork>
+
+#include <iostream>
 
 typedef std::vector< std::string > module_list;
 
 namespace PFG
 {
 
-//void addToModuleList(module_list &l, const std::string &toAdd);
-
 void getModules(stringList &includes, stringList &modules)
 {
+	std::vector< stringList > moduleVectorShort, moduleVector;
+	createModuleVector( moduleVectorShort, moduleVector );
+
 	for(stringList::iterator it = includes.begin(); it != includes.end(); it++)
 	{
 		//std::cout << *it << std::endl;
@@ -38,8 +44,23 @@ void getModules(stringList &includes, stringList &modules)
 			qtInclude = (*it).substr( pos2 + 1, last - pos2 - 1 );
 		}
 
+		for( std::vector< stringList >::iterator itMod = moduleVector.begin(); itMod != moduleVector.end(); itMod++ )
+		{
+			for( stringList::iterator stringIt = (((*itMod).begin())++); stringIt != (*itMod).end(); stringIt++ )
+			{
+				if( qtInclude.find( *stringIt ) != std::string::npos )
+				{
+					std::cout << qtInclude << std::endl;
+					std::cout << *stringIt << std::endl;
+					addToStringList(modules, std::string("+").append(*(itMod->begin())) );
+				}
+			}
+		}
+		std::cout << "size: " << modules.size() << std::endl;
+
 		//std::cout << "qtInclude: " << qtInclude << std::endl;
 
+		/*
 		if( qtInclude.find("QtXml") != std::string::npos ||
 			qtInclude.find("QDom") != std::string::npos ||
 			qtInclude.find("QXml") != std::string::npos )
@@ -81,6 +102,7 @@ void getModules(stringList &includes, stringList &modules)
 		{
 			addToStringList(modules, std::string("+svg"));
 		}
+		*/
 	}
 
 	/*

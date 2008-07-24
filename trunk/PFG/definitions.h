@@ -20,4 +20,3 @@ void addToStringList(stringList &list, const std::string &toAdd);
 }
 
 #endif // __DEFINITIONS_H__
-
