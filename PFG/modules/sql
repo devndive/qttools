@@ -1,0 +1,17 @@
+QtSql
+QSqlDatabase
+QSqlDriver
+QSqlDriverCreator
+QSqlDriverCreatorBase
+QSqlDriverPlugin
+QSqlError
+QSqlField
+QSqlIndex
+QSqlQuery
+QSqlQueryModel
+QSqlRecord
+QSqlRelation
+QSqlRelationalDelegate
+QSqlRelationalTableModel
+QSqlResult
+QSqlTableModel

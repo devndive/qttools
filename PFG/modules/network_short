@@ -1,0 +1,12 @@
+QtNetwork
+QAbstractSocket
+QAuthenticator
+QFtp
+QHost
+QHttp
+QLocal
+QNetwork
+QSsl
+QTcp
+QUdp
+QUrl

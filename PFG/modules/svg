@@ -1,0 +1,5 @@
+QtSvg
+QGraphicsSvgItem
+QSvgGenerator
+QSvgRenderer
+QSvgWidget

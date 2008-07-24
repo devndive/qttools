@@ -1,0 +1,7 @@
+QtOpenGL
+QGLColormap
+QGLContext
+QGLFormat
+QGLFramebufferObject
+QGLPixelBuffer
+QGLWidget
