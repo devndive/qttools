@@ -16,13 +16,13 @@ int main(int argc, char *argv[])
 {
 	try
 	{
-		std::string path, appName, outputFile, templateType, help;
+		std::string path, appName, outputFile, templateType;
 		PFG::stringList libDirs, libs;
 		std::streambuf* sbuf(std::cout.rdbuf());
 
 		po::options_description general("General options", 76);
 		general.add_options()
-			("help,h", po::value<std::string>(&help)->default_value("all"), "help message, options are all|general|modules")
+			("help,h", po::value<std::string>(), "help message, options are all|general|modules")
 			("input-dir,i", po::value<std::string>(&path)->default_value("."), "location of project")
 			("name,n", po::value<std::string>(&appName)->default_value("Default App"), "application name")
 			("output-file,o", po::value<std::string>(&outputFile)->default_value(""), "name of output file, if omitted the standard output is used")
@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 					" sub \tCreates a Makefile containing rules for the subdirectories specified using the SUBDIRS variable. Each subdirectory must contain its own project file.\n"
 					" vca \tCreates a Visual Studio Project file to build an application.\n"
 					" vcl \tCreates a Visual Studio Project file to build a library.")
-			("lib-dirs,L", po::value<PFG::stringList>(&libDirs), "extra library dirs")
-			("libs,l", po::value<PFG::stringList>(&libs), "extra libraries")
+			("lib-dir,L", po::value<PFG::stringList>(&libDirs), "extra library dirs")
+			("lib,l", po::value<PFG::stringList>(&libs), "extra libraries")
 		;
 
 		po::options_description modules("Module options", 76);
@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
 
 		if( vm.count("help") )
 		{
+			std::string help( vm["help"].as<std::string>() );
+
 			if( help == "all" )
 				std::cout << all;
 			else if( help == "general" )
@@ -72,7 +74,10 @@ int main(int argc, char *argv[])
 			else if( help == "modules" )
 				std::cout << modules;
 			else
+			{
+				std::cout << "Incorrect option for help '" << help << "'" << std::endl;
 				std::cout << all;
+			}
 
 			std::cout << std::endl;
 			std::cout << "For most users no module options, no libs and no lib-dirs are needed. ";
@@ -81,6 +86,8 @@ int main(int argc, char *argv[])
 			std::cout << "e.g.:" << std::endl;
 			std::cout << "  PFG --input-dir ~/qttools/PFG/ --name PFG --output-file PFG.pro";
 			std::cout << std::endl << std::endl;
+			std::cout << "For more information see http://qttools.googlecode.com/ or conatact me";
+			std::cout << " yann.duval.82@googlemail.com" << std::endl << std::endl;
 
 			return(0);
 		}
@@ -199,104 +206,10 @@ int main(int argc, char *argv[])
 		}
 
 		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleList, templateType, appName, sbuf, libDirs, libs);
-    }
+	}
 	catch(std::exception& e)
 	{
 		std::cout << e.what() << "\n";
 	}
-
-/*
-	if( argc > 1 )
-	{
-		if( std::string(argv[1]) == "help" || 
-			std::string(argv[1]) == "/?" || 
-			std::string(argv[1]) == "-h" || 
-			std::string(argv[1]) == "--help" )
-		{
-			if( argc == 2 )
-			{
-				std::cout << "usage: " << argv[0] << " [path] [templatetype] [target]" << std::endl << std::endl;
-				std::cout << "usage: " << argv[0] << " help [path|templatetype|target] for more inforamtion" << std::endl;
-			}
-
-			if( argc > 2 )
-			{
-				std::cout << "usage: " << argv[0] << " [path] [templatetype] [target]" << std::endl << std::endl;
-				
-				if( std::string(argv[2]) == "path" )
-				{
-					std::cout << " path:" << std::endl;
-					std::cout << "   location of project" << std::endl;
-				}
-				else if( std::string(argv[2]) == "templatetype" )
-				{
-					std::cout << " templatetype:" << std::endl;
-					std::cout << "   app (default)" << std::endl;
-					std::cout << "     Creates a Makefile to build an application." << std::endl;
-					std::cout << "   lib" << std::endl;
-					std::cout << "     Creates a Makefile to build a library." << std::endl;
-					std::cout << "   subdirs" << std::endl;
-					std::cout << "     Creates a Makefile containing rules for the" << std::endl;
-					std::cout << "     subdirectories specified using the SUBDIRS" << std::endl;
-					std::cout << "     variable. Each subdirectory must contain its" << std::endl;
-					std::cout << "     own project file." << std::endl;
-					std::cout << "   vcapp" << std::endl;
-					std::cout << "     Creates a Visual Studio Project file to build" << std::endl;
-					std::cout << "     an application." << std::endl;
-					std::cout << "   vclib" << std::endl;
-					std::cout << "     Creates a Visual Studio Project file to build" << std::endl;
-					std::cout << "     a library." << std::endl;
-				}
-				else if( std::string(argv[2]) == "target" )
-				{
-					std::cout << " target:" << std::endl;
-					std::cout << "   application name (default: \"Default APP\")" << std::endl;
-				}
-				else
-				{
-					std::cout << " error: unknown command ( " << argv[2] << " )" << std::endl;
-					std::cout << "   possible commands: path | templatetype | target" << std::endl;
-				}
-			}
-		}
-		else
-		{		
-			std::string templateType("app");
-			std::string target("Default APP");
-
-			if( argc > 2 )
-			{
-				if( std::string( argv[2] ) != "app" && std::string( argv[2] ) != "lib" && std::string( argv[2] ) != "subdirs" && std::string( argv[2] ) != "vcapp" && std::string( argv[2] ) != "vclib" )
-				{
-					std::cout << " error: invalid templatetype (\"" << argv[2] << "\")" << std::endl;
-					std::cout << " use: " << argv[0] << " help templatetype for more information" << std::endl;
-					return( -1 );
-				}
-				templateType = argv[2];
-			}
-
-			if( argc > 3 )
-			{
-				target = argv[3];
-			}
-
-			fileList h_files, cpp_files, qrc_files, uic_files;
-			pathList depend_paths;
-			includeList includes;
-
-			get_all_files(argv[1], h_files, cpp_files, qrc_files, uic_files, depend_paths);
-
-			get_all_includes(argv[1], h_files, cpp_files, includes);
-
-			std::string modules_string = get_modules_string(includes);
-
-			write_pro_file(h_files, cpp_files, qrc_files, uic_files, depend_paths, modules_string, templateType, target);
-		}
-	}
-	else
-	{
-		std::cerr << "usage: " << argv[0] << " [path] [templateType] [target]" << std::endl << std::endl;
-		std::cerr << "usage: " << argv[0] << " help [path|templatetype|target] for more inforamtion" << std::endl;
-	}
-*/
 }
+

@@ -15,7 +15,15 @@ void getAllFiles(const std::string &path, stringList &hFiles, stringList &cppFil
 {
 	bfs::path initialPath( bfs::initial_path<bfs::path>() );
 
-	initialPath = bfs::system_complete( bfs::path( path, bfs::native ) );
+	if( path[path.size() - 1] == '/' )
+	{
+		initialPath = bfs::system_complete( bfs::path( path.substr(0, path.size() - 1), bfs::native ) );
+	}
+	else
+	{
+		initialPath = bfs::system_complete( bfs::path( path, bfs::native ) );
+	}
+
 	getAllFilesRec(initialPath, initialPath, hFiles, cppFiles, qrcFiles, uicFiles, dependPaths);
 }
 
