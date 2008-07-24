@@ -20,4 +20,10 @@ SOURCES = main.cpp \
           RFE_Widget/RFE_Widget.cpp
 }}}
 
-The RFE has been compiled, linked and tested against Qt 4.3 and 4.4
+The RFE has been compiled, linked and tested against Qt 4.3 and 4.4.
+
+If you have the PFG you could use it for generating the project file instead of taking this one.
+
+e.g.:
+
+PFG --name RFE --output-file ~/qttools/RFE/RFE.pro --input-dir ~/qttools/RFE/
