@@ -7,7 +7,7 @@
 namespace PFG
 {
 
-void getModules(stringList &includes, stringList &modules);
+void getModules(stringList &includes, stringList &modules, bool shortModules);
 
 } // namespace PFG
 

@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
 
 		po::options_description general("General options", 76);
 		general.add_options()
-			("help,h", po::value<std::string>(), "help message, options are all|general|modules")
+			//("help,h", po::value<std::string>(), "help message, options are all|general|modules")
+			("help,h", "help message")
 			("input-dir,i", po::value<std::string>(&path)->default_value("."), "location of project")
 			("name,n", po::value<std::string>(&appName)->default_value("Default App"), "application name")
 			("output-file,o", po::value<std::string>(&outputFile)->default_value(""), "name of output file, if omitted the standard output is used")
@@ -34,8 +35,10 @@ int main(int argc, char *argv[])
 					" vcl \tCreates a Visual Studio Project file to build a library.")
 			("lib-dir,L", po::value<PFG::stringList>(&libDirs), "extra library dirs")
 			("lib,l", po::value<PFG::stringList>(&libs), "extra libraries")
+			("no-short,s", "do not use short module files, takes longer but is more thorough") 
 		;
 
+		/*
 		po::options_description modules("Module options", 76);
 		modules.add_options()
 			("core", "use qt core module")
@@ -55,16 +58,19 @@ int main(int argc, char *argv[])
 			("xml", "use qt xml support")
 			("no-xml", "do not use qt xml support")
 		;
+		*/
 
-		po::options_description all("Allowed options");
-		all.add(general).add(modules);
+		//po::options_description all("Allowed options");
+		//all.add(general).add(modules);
 
 		po::variables_map vm;
-		po::store(po::parse_command_line(argc, argv, all), vm);
+		//po::store(po::parse_command_line(argc, argv, all), vm);
+		po::store(po::parse_command_line(argc, argv, general), vm);
 		po::notify(vm);
 
 		if( vm.count("help") )
 		{
+			/*
 			std::string help( vm["help"].as<std::string>() );
 
 			if( help == "all" )
@@ -78,6 +84,9 @@ int main(int argc, char *argv[])
 				std::cout << "Incorrect option for help '" << help << "'" << std::endl;
 				std::cout << all;
 			}
+			*/
+
+			std::cout << general;
 
 			std::cout << std::endl;
 			std::cout << "For most users no module options, no libs and no lib-dirs are needed. ";
@@ -86,8 +95,10 @@ int main(int argc, char *argv[])
 			std::cout << "e.g.:" << std::endl;
 			std::cout << "  PFG --input-dir ~/qttools/PFG/ --name PFG --output-file PFG.pro";
 			std::cout << std::endl << std::endl;
-			std::cout << "For more information see http://qttools.googlecode.com/ or conatact me";
-			std::cout << " yann.duval.82@googlemail.com" << std::endl << std::endl;
+			std::cout << "For more information see" << std::endl;
+			std::cout << "  http://qttools.googlecode.com/" << std::endl;
+			std::cout << "or conatact me directly" << std::endl;
+			std::cout << "  yann.duval.82@googlemail.com" << std::endl << std::endl;
 
 			return(0);
 		}
@@ -122,9 +133,17 @@ int main(int argc, char *argv[])
 		PFG::getAllFiles(path, hFiles, cppFiles, qrcFiles, uicFiles, dependPaths);
 
 		PFG::getAllIncludes(path, hFiles, cppFiles, includes);
-		PFG::getModules(includes, moduleList);
 
-		
+		if( vm.count("no-short") )
+		{
+			PFG::getModules(includes, moduleList, false);
+		}
+		else
+		{
+			PFG::getModules(includes, moduleList, true);
+		}
+
+		/*
 		if( vm.count("core") )
 		{
 			PFG::addToStringList(moduleList, std::string("+core"));
@@ -204,6 +223,7 @@ int main(int argc, char *argv[])
 		{
 			PFG::addToStringList(moduleList, std::string("-xml"));
 		}
+		*/
 
 		PFG::writeProFile(hFiles, cppFiles, qrcFiles, uicFiles, dependPaths, moduleList, templateType, appName, sbuf, libDirs, libs);
 	}
