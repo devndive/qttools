@@ -7,7 +7,7 @@ namespace bfs = boost::filesystem;
 namespace PFG
 {
 
-void createModuleVector( std::vector< stringList > &moduleVectorShort, std::vector< stringList > &moduleVector )
+void createModuleVector( std::vector< stringList > &moduleVector, bool shortModules)
 {
 	std::string path("./modules/");
 	bfs::path modulePath( path );
@@ -29,41 +29,47 @@ void createModuleVector( std::vector< stringList > &moduleVectorShort, std::vect
 						std::string basename( bfs::basename( dirItr->leaf() ) );
 						std::string filename = dirItr->path().string().substr(dirItr->path().string().size() - basename.size() - extension.size(), dirItr->path().string().size() );
 
-						if( filename.find("_short") != std::string::npos )
+						if( shortModules )
 						{
-							stringList includes;
-
-							std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
-							includes.push_back( filename.substr( 0, filename.find( "_short" ) ) );
-							
-							while(file)
+							if( filename.find("_short") != std::string::npos )
 							{
-								std::string line;
-								std::getline(file, line);
+								stringList includes;
 
-								//includes.push_back(line);
-								addToStringList(includes, line);
+								std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
+								includes.push_back( filename.substr( 0, filename.find( "_short" ) ) );
+								
+								while(file)
+								{
+									std::string line;
+									std::getline(file, line);
+
+									//includes.push_back(line);
+									addToStringList(includes, line);
+								}
+
+								moduleVector.push_back( includes );
 							}
-
-							moduleVectorShort.push_back( includes );
 						}
 						else
 						{
-							stringList includes;
-
-							std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
-							includes.push_back( filename );
-
-							while(file)
+							if( filename.find("_short") == std::string::npos )
 							{
-								std::string line;
-								std::getline(file, line);
+								stringList includes;
 
-								//includes.push_back(line);
-								addToStringList(includes, line);
+								std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
+								includes.push_back( filename );
+
+								while(file)
+								{
+									std::string line;
+									std::getline(file, line);
+
+									//includes.push_back(line);
+									addToStringList(includes, line);
+								}
+
+								moduleVector.push_back( includes );
 							}
-
-							moduleVector.push_back( includes );
 						}
 					}
 				}

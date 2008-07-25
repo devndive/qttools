@@ -6,7 +6,7 @@
 namespace PFG
 {
 
-void createModuleVector( std::vector< stringList > &moduleVectorShort, std::vector< stringList > &moduleVector );
+void createModuleVector( std::vector< stringList > &moduleVectorShort, bool shortModules );
 
 }
 

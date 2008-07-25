@@ -13,10 +13,11 @@ typedef std::vector< std::string > module_list;
 namespace PFG
 {
 
-void getModules(stringList &includes, stringList &modules)
+void getModules(stringList &includes, stringList &modules, bool shortModules)
 {
-	std::vector< stringList > moduleVectorShort, moduleVector;
-	createModuleVector( moduleVectorShort, moduleVector );
+	std::vector< stringList > moduleVector;
+	createModuleVector( moduleVector, shortModules );
+	//int comparisons = 0;
 
 	for(stringList::iterator it = includes.begin(); it != includes.end(); it++)
 	{
@@ -42,6 +43,7 @@ void getModules(stringList &includes, stringList &modules)
 		{
 			for( stringList::iterator stringIt = (*itMod).begin(); stringIt != (*itMod).end(); stringIt++ )
 			{
+				//comparisons++;
 				if( !(qtInclude.find( *stringIt ) == std::string::npos) )
 				{
 					addToStringList(modules, std::string("+").append(*(itMod->begin())) );
@@ -96,6 +98,7 @@ void getModules(stringList &includes, stringList &modules)
 		*/
 	}
 
+	//std::cout << "comparisons: " << comparisons << std::endl;
 	/*
 	for(module_list::iterator it = modules.begin(); it != modules.end(); it++)
 	{
