@@ -33,11 +33,6 @@ void createModuleVector( std::vector< stringList > &moduleVectorShort, std::vect
 						{
 							stringList includes;
 
-							//std::cout << (initialPath / dirItr->leaf()).string().c_str() << std::endl;
-							//std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
-							
-							//std::cout << "pos: " << filename.find( "_short" ) << std::endl;
-							//std::cout << "filename: " << filename.substr( 0, filename.find( "_short" ) ) << std::endl;
 							std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
 							includes.push_back( filename.substr( 0, filename.find( "_short" ) ) );
 							
@@ -46,25 +41,26 @@ void createModuleVector( std::vector< stringList > &moduleVectorShort, std::vect
 								std::string line;
 								std::getline(file, line);
 
-								includes.push_back(line);
+								//includes.push_back(line);
+								addToStringList(includes, line);
 							}
-							
 
 							moduleVectorShort.push_back( includes );
 						}
 						else
 						{
-							//std::cout << " no short " << std::endl;
 							stringList includes;
 
 							std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
 							includes.push_back( filename );
+
 							while(file)
 							{
 								std::string line;
 								std::getline(file, line);
 
-								includes.push_back(line);
+								//includes.push_back(line);
+								addToStringList(includes, line);
 							}
 
 							moduleVector.push_back( includes );

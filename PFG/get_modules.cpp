@@ -20,16 +20,12 @@ void getModules(stringList &includes, stringList &modules)
 
 	for(stringList::iterator it = includes.begin(); it != includes.end(); it++)
 	{
-		//std::cout << *it << std::endl;
-
 		std::string qtInclude;
 
 		size_t pos1 = (*it).find("\"");
 		if( pos1 != std::string::npos )
 		{
-			//std::cout << "found \" at pos (" << pos1 << ")" << std::endl;
 			size_t last = (*it).rfind("\"");
-			//std::cout << "found \" at pos (" << last << ")" << std::endl;
 
 			qtInclude = (*it).substr( pos1 + 1, last - pos1 - 1 );
 		}
@@ -37,26 +33,21 @@ void getModules(stringList &includes, stringList &modules)
 		size_t pos2 = (*it).find("<");
 		if( pos2 != std::string::npos )
 		{
-			//std::cout << "found < at pos (" << pos2 << ")" << std::endl;
 			size_t last = (*it).rfind(">");
-			//std::cout << "found > at pos (" << last << ")" << std::endl;
 
 			qtInclude = (*it).substr( pos2 + 1, last - pos2 - 1 );
 		}
 
 		for( std::vector< stringList >::iterator itMod = moduleVector.begin(); itMod != moduleVector.end(); itMod++ )
 		{
-			for( stringList::iterator stringIt = (((*itMod).begin())++); stringIt != (*itMod).end(); stringIt++ )
+			for( stringList::iterator stringIt = (*itMod).begin(); stringIt != (*itMod).end(); stringIt++ )
 			{
-				if( qtInclude.find( *stringIt ) != std::string::npos )
+				if( !(qtInclude.find( *stringIt ) == std::string::npos) )
 				{
-					std::cout << qtInclude << std::endl;
-					std::cout << *stringIt << std::endl;
 					addToStringList(modules, std::string("+").append(*(itMod->begin())) );
 				}
 			}
 		}
-		std::cout << "size: " << modules.size() << std::endl;
 
 		//std::cout << "qtInclude: " << qtInclude << std::endl;
 
