@@ -1,5 +1,6 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include <fstream>
 #include "create_module_vector.h"
 
 namespace bfs = boost::filesystem;
