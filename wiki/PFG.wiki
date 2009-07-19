@@ -6,6 +6,9 @@ To compile the PFG you need at least [http://www.boost.org Boost v. 1.34.1] . It
 To compile with the g++ the command could look like
   * g++ -L /usr/lib/ -lboost_program_options -lboost_filesystem -o PFG `*`.cpp
 
+To compile with the cl.exe the command could look like
+  * cl.exe /EHsc /I %BOOSTDIR% *.cpp /link /LIBPATH:%BOOSTLIB% -out:PFG.exe
+
 ==Usage==
 || General options: || || ||
 ||-h [ --help ] || this help message || ||
