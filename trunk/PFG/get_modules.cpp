@@ -1,22 +1,19 @@
-#include <vector>
-#include <algorithm>
-
+#include "definitions.h"
 #include "get_modules.h"
 #include "create_module_vector.h"
 
-//#include <QtNetwork>
+#include <vector>
+#include <algorithm>
 
 #include <iostream>
-
-typedef std::vector< std::string > module_list;
 
 namespace PFG
 {
 
-void getModules(stringList &includes, stringList &modules, bool shortModules)
+void getModules(stringList &includes, stringList &modules, bool useShortModules)
 {
 	std::vector< stringList > moduleVector;
-	createModuleVector( moduleVector, shortModules );
+	createModuleVector( moduleVector, useShortModules );
 	//int comparisons = 0;
 
 	for(stringList::iterator it = includes.begin(); it != includes.end(); it++)
@@ -44,7 +41,7 @@ void getModules(stringList &includes, stringList &modules, bool shortModules)
 			for( stringList::iterator stringIt = (*itMod).begin(); stringIt != (*itMod).end(); stringIt++ )
 			{
 				//comparisons++;
-				if( !(qtInclude.find( *stringIt ) == std::string::npos) )
+				if( qtInclude.find( *stringIt ) != std::string::npos )
 				{
 					addToStringList(modules, std::string("+").append(*(itMod->begin())) );
 				}

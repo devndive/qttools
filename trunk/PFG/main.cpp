@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 
 		if( vm.count("no-short") )
 		{
-			PFG::getModules(includes, moduleList, false);
+			PFG::getModules(includes, moduleList);
 		}
 		else
 		{
