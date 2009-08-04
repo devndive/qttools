@@ -37,8 +37,6 @@ void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_file
 
 	for(stringList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
 	{
-		//std::cout << (initial_path / *it ).string() << std::endl;
-
 		std::ifstream file;
 		file.open( (initial_path / *it ).string().c_str(), std::ifstream::in );
 
@@ -47,7 +45,10 @@ void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_file
 			std::string line;
 			std::getline(file, line);
 
-			if( line.find("#include ") != std::string::npos && line.find("Q") != std::string::npos )
+			if( line.find("//") == std::string.npos && 
+				line.find("#include ") != std::string::npos && 
+				line.find("Q") != std::string::npos
+			)
 			{
 				addToStringList(includes, line);
 			}
