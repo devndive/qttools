@@ -9,6 +9,8 @@ namespace RFE
 
 class ImagePreview : public QWidget
 {
+Q_OBJECT
+
 private:
    QImage image;
 
