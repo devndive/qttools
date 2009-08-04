@@ -6,7 +6,7 @@ namespace RFE
 ImagePreview::ImagePreview(QString &filename)
 : image(filename)
 {
-	setWindowTitle(tr("RFE Preview - ") + filename.mid(filename.lastIndexOf('/') + 1));
+	setWindowTitle(QString("RFE").append(tr("Preview")).append("- ") + filename.mid(filename.lastIndexOf('/') + 1));
 	if( image.width() > 50 )
 	{
 		setGeometry( 100, 100, image.width() + 10, image.height() + 10 );

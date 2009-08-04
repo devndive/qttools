@@ -18,7 +18,7 @@ void Widget::setupLayout()
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
 	modelView = new QStandardItemModel(this);
-	modelView->setHorizontalHeaderItem(0, new QStandardItem(tr("Resourcen")));
+	modelView->setHorizontalHeaderItem(0, new QStandardItem(tr("Resources")));
 	treeView = new QTreeView(this);
 	treeView->setModel(modelView);
 	
@@ -36,7 +36,7 @@ void Widget::setupLayout()
 	selectResource->setEnabled(false);
 
 	QGridLayout *gridLayout = new QGridLayout;
-	gridLayout->addWidget(new QLabel(tr("Pfad:")), 0, 0);
+	gridLayout->addWidget(new QLabel(tr("Path:")), 0, 0);
 	gridLayout->addWidget(path, 0, 1);
 	gridLayout->addWidget(selectResource, 0, 2);
 
@@ -93,7 +93,7 @@ void Widget::addNewGroup()
 	}
 	else
 	{
-		QStandardItem *item = new StandardItem(QIcon(":/icons/group.png"), tr("neue Gruppe"));
+		QStandardItem *item = new StandardItem(QIcon(":/icons/group.png"), tr("new Group"));
 		modelView->appendRow(item);
 		treeView->setCurrentIndex( item->index() );
 		treeViewClicked( item->index() );
@@ -123,7 +123,7 @@ void Widget::addNewItem()
 {
 	if(treeView->currentIndex().row() != -1)
 	{
-		StandardItem *newResource = new StandardItem(tr("neue Resource"));
+		StandardItem *newResource = new StandardItem(tr("new Resource"));
 
 		if(treeView->currentIndex().parent().row() != -1)
 		{
@@ -167,7 +167,7 @@ void Widget::saveResourceFile()
 {
 	if( modelView->rowCount() > 0 )
 	{
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Resourcendatei wählen"), ".", tr("Resourcendatei (*.qrc)"));
+		QString fileName = QFileDialog::getSaveFileName(this, tr("choose Resourcefile"), ".", tr("Resourcefile (*.qrc)"));
 		if(!fileName.isEmpty())
 		{
 			QFile inputFile(fileName);
@@ -221,19 +221,19 @@ void Widget::saveResourceFile()
 			}
 			else
 			{
-				QMessageBox::critical(this, "RFE", tr("Die Datei konnte leider nicht geöffnet werden!"));
+				QMessageBox::critical(this, "RFE", tr("The file could not be opened!"));
 			}
 		}
 	}
 	else
 	{
-		QMessageBox::information(this, "RFE", tr("Es gibt keine Daten die gespeichert werden müssen!"));
+		QMessageBox::information(this, "RFE", tr("No data to be saved!"));
 	}
 }
 
 void Widget::loadResourceFile()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Resourcendatei wählen"), ".", tr("Resourcendatei (*.qrc)"));
+	QString fileName = QFileDialog::getOpenFileName(this, tr("choose Resourcefile"), ".", tr("Resourcefile (*.qrc)"));
 	
 	if(!fileName.isEmpty())
 	{
@@ -247,7 +247,7 @@ void Widget::loadResourceFile()
 			if( line.indexOf("<!DOCTYPE RCC><RCC version=\"1.0\">") >=0 )
 			{
 				modelView->clear();
-				modelView->setHorizontalHeaderItem(0, new QStandardItem(tr("Resourcen")));
+				modelView->setHorizontalHeaderItem(0, new QStandardItem(tr("Resources")));
 				path->setText("");
 				path->setEnabled(false);
 				addItem->setEnabled(false);
@@ -290,7 +290,7 @@ void Widget::loadResourceFile()
 			}
 			else
 			{
-				QMessageBox::information(this, "RFE", tr("Es scheint sich hier nicht um eine wohl formatierte Resourcendatei zu handeln!"));
+				QMessageBox::information(this, "RFE", tr("The file does not seem to be well formed!"));
 			}
 		}
 	}
@@ -298,7 +298,7 @@ void Widget::loadResourceFile()
 
 void Widget::onSelectResource()
 {
-	QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Resource wählen"), ".", supportedImageFormats().toStdString().c_str());
+	QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("choose Resource"), ".", supportedImageFormats().toStdString().c_str());
 
 	if( fileNames.size() >= 1 )
 	{
@@ -396,7 +396,7 @@ QString Widget::supportedImageFormats()
 	QString available_image_formats;
 	QList<QByteArray> byte_array_list = QImageReader::supportedImageFormats();
 
-	available_image_formats.append(tr("Grafikdatei ("));
+	available_image_formats.append(tr("Imagefile ("));
 
 	for(QList<QByteArray>::Iterator it = byte_array_list.begin(); it != byte_array_list.end(); ++it)
 	{
@@ -433,7 +433,7 @@ void Widget::onRemove()
 
 void Widget::onSelectProjectLocation()
 {
-	QString folderName = QFileDialog::getExistingDirectory(this, tr("Projektordner wählen"), ".", QFileDialog::ShowDirsOnly);
+	QString folderName = QFileDialog::getExistingDirectory(this, tr("choose Projectfolder"), ".", QFileDialog::ShowDirsOnly);
 
 	if(!folderName.isEmpty())
 	{
