@@ -45,7 +45,7 @@ void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_file
 			std::string line;
 			std::getline(file, line);
 
-			if( line.find("//") == std::string.npos && 
+			if( line.find("//") == std::string::npos && 
 				line.find("#include ") != std::string::npos && 
 				line.find("Q") != std::string::npos
 			)
