@@ -1,5 +1,6 @@
-#include <algorithm>
 #include "definitions.h"
+
+#include <algorithm>
 
 namespace PFG
 {
