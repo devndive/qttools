@@ -1,84 +1,57 @@
-#include <boost/filesystem.hpp>
-#include <iostream>
-#include <fstream>
 #include "create_module_vector.h"
 
-namespace bfs = boost::filesystem;
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QStringList>
+
+#include <iostream>
+#include <fstream>
 
 namespace PFG
 {
 
 void createModuleVector( std::vector< stringList > &moduleVector, bool shortModules)
 {
-	std::string path("./modules/");
-	bfs::path modulePath( path );
+	// Modulefiles will be in modules subdir. This should be configurable in future
+	QDir moduleBasePath("./modules/");
 
-	if( bfs::exists( modulePath ) )
+	// Check if moduleBasePath exists and is directory
+	if( moduleBasePath.exists() )
 	{
-		if ( bfs::is_directory( modulePath ) )
+		// Get all files in directory, exclude SymLinks and special-files
+		moduleBasePath.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+		
+		QStringList filterList;
+		// only use short modulename lists
+		if( shortModules )
 		{
-			bfs::path initialPath = bfs::system_complete( bfs::path( path, bfs::native ) );
-			bfs::directory_iterator endIter;
+			filterList << "*_short";
+		}
+		// use the full modulename lists
+		else
+		{
+			filterList << "*_long";
+		}
+		// set the name filter
+		moduleBasePath.setNameFilters(filterList);
+		
+		// get the filelist
+		QFileInfoList fileList = moduleBasePath.entryInfoList();
 
-			for ( bfs::directory_iterator dirItr( modulePath ); dirItr != endIter; ++dirItr )
+
+		for (int i = 0; i < fileList.count(); ++i)
+		{
+			std::ifstream file( qPrintable(fileList.at(i).filePath()) );
+			stringList includes;
+		
+			while(file)
 			{
-				try
-				{
-					if ( bfs::is_regular( dirItr->status() ) )
-					{
-						std::string extension( bfs::extension( dirItr->leaf() ) );
-						std::string basename( bfs::basename( dirItr->leaf() ) );
-						std::string filename = dirItr->path().string().substr(dirItr->path().string().size() - basename.size() - extension.size(), dirItr->path().string().size() );
-
-						if( shortModules )
-						{
-							if( filename.find("_short") != std::string::npos )
-							{
-								stringList includes;
-
-								std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
-								includes.push_back( filename.substr( 0, filename.find( "_short" ) ) );
-								
-								while(file)
-								{
-									std::string line;
-									std::getline(file, line);
-
-									//includes.push_back(line);
-									addToStringList(includes, line);
-								}
-
-								moduleVector.push_back( includes );
-							}
-						}
-						else
-						{
-							if( filename.find("_short") == std::string::npos )
-							{
-								stringList includes;
-
-								std::ifstream file( (initialPath / dirItr->leaf()).string().c_str() );
-								includes.push_back( filename );
-
-								while(file)
-								{
-									std::string line;
-									std::getline(file, line);
-
-									//includes.push_back(line);
-									addToStringList(includes, line);
-								}
-
-								moduleVector.push_back( includes );
-							}
-						}
-					}
-				}
-				catch ( const std::exception & ex )
-				{
-					std::cerr << dirItr->leaf() << " " << ex.what() << std::endl;
-				}
+				std::string line;
+				std::getline(file, line);
+				addToStringList(includes, line);
 			}
+			
+			moduleVector.push_back( includes );
 		}
 	}
 }
