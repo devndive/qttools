@@ -1,50 +1,60 @@
 #include "get_all_includes.h"
+#include "definitions.h"
 
-#include <iostream>
-#include <fstream>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 namespace PFG
 {
 
-void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_files, stringList &includes)
+void getAllIncludes(QString path, QFileInfoList h_files, QFileInfoList cpp_files, QStringList& includes)
 {
-	//includeList includes;
-
-	for(stringList::iterator it = h_files.begin(); it != h_files.end(); it++)
-	{
-		std::ifstream file( (*it).c_str(), std::ifstream::in );
-
-		while(file)
+	for(QFileInfoList::iterator it = h_files.begin(); it != h_files.end(); it++)
+	{		
+		QFile file(it->absoluteFilePath());
+		
+		if(file.open(QFile::ReadOnly))
 		{
-			std::string line;
-			std::getline(file, line);
-
-			if( line.find("#include ") != std::string::npos && line.find("Q") != std::string::npos )
+			QTextStream textStream(&file);
+			
+			while(!textStream.atEnd())
 			{
-				addToStringList(includes, line);
+				QString line = textStream.readLine();
+				
+				if( line.indexOf("#include ") != -1 && line.indexOf("Q") != -1 )
+				{
+					addToStringList(includes, line);
+				}
 			}
+			
+			file.close();
 		}
 	}
 
-	for(stringList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
+	for(QFileInfoList::iterator it = cpp_files.begin(); it != cpp_files.end(); it++)
 	{
-		std::ifstream file( (*it).c_str(), std::ifstream::in );
-
-		while(file)
+		QFile file(it->absoluteFilePath());
+		if(file.open(QFile::ReadOnly))
 		{
-			std::string line;
-			std::getline(file, line);
-
-			if( line.find("//") == std::string::npos && 
-				line.find("#include ") != std::string::npos && 
-				line.find("Q") != std::string::npos
-			)
+			QTextStream textStream(&file);
+			
+			while(!textStream.atEnd())
 			{
-				addToStringList(includes, line);
-			}
-		}
+				QString line = textStream.readLine();
 
-		file.close();
+				if( line.indexOf("//") == -1 && 
+					line.indexOf("#include ") != -1 && 
+					line.indexOf("Q") != -1
+				   )
+				{
+					addToStringList(includes, line);
+				}
+			}
+			
+			file.close();
+		}
 	}
 }
 

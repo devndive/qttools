@@ -1,137 +1,138 @@
 #include "write_pro_file.h"
-#include "definitions.h"
 
-#include <iostream>
-#include <iomanip>
+#include <QtCore/QFileInfoList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QTextStream>
+#include <QtCore/QDir>
 
 namespace PFG
 {
 
-void writeList(stringList& listToWrite, const std::string& prefix, std::streambuf *sbuf)
+void writeList(QDir basePath, QFileInfoList listToWrite, const QString &prefix, QIODevice *device, const QString &appender)
 {
-	std::ostream output(sbuf);
-
-	output << prefix << " = " << *(listToWrite.begin());
-	
-	for(stringList::iterator it = listToWrite.begin()+1; it != listToWrite.end(); it++)
+	if(listToWrite.count() > 0)
 	{
-		output << " \\" << std::endl;
-		output << std::setw(prefix.length()+2) << std::setfill(' ') << " " << *it;
+		QTextStream textStream(device);
+		
+		textStream << prefix << appender << basePath.relativeFilePath(listToWrite.begin()->canonicalFilePath());
+		
+		if(listToWrite.count() > 1)
+		{
+			for(QFileInfoList::iterator it = listToWrite.begin() + 1; it != listToWrite.end(); it++)
+			{
+				textStream << " \\\n";
+				textStream << " " << basePath.relativeFilePath(it->canonicalFilePath());
+			}
+		}
+		
+		textStream << "\n";
 	}
-	output << std::endl;
 }
 
 void writeProFile
 (	
-	stringList &headerFiles
-	, stringList &sourceFiles
-	, stringList &qrcFiles
-	, stringList &uicFiles
-	, stringList &dependPaths
-	, stringList &modules
-	, std::string &templateType
-	, std::string &target
-	, std::streambuf *sbuf
-	, stringList &libDirs
-	, stringList &libs
+	QDir basePath
+	, QFileInfoList headerFiles
+	, QFileInfoList sourceFiles
+	, QFileInfoList qrcFiles
+	, QFileInfoList uicFiles
+	, QFileInfoList dependPaths
+	, QStringList modules
+	, QString &templateType
+	, QString &target
+	, QIODevice *device
+	, QStringList libDirs
+	, QStringList libs
 )
 {
-	std::ostream output(sbuf);
-
+	QTextStream textStream(device);
+	
 	if( !(headerFiles.empty() && sourceFiles.empty() && qrcFiles.empty() && uicFiles.empty()) )
 	{
-		output << "TEMPLATE = " << templateType << std::endl;
-		output << "TARGET = " << target << std::endl;
+		textStream << "TEMPLATE = " << templateType << "\n";
+		textStream << "TARGET = " << target << "\n";
+		textStream.flush();
 
 		if( !dependPaths.empty() )
 		{
-			output << "DEPENDPATH += .";
-			for(stringList::iterator it = dependPaths.begin(); it != dependPaths.end(); it++)
-			{
-				output << " " << *it;
-			}
-			output << std::endl;
-
-			output << "INCLUDEPATH += .";
-			for(stringList::iterator it = dependPaths.begin(); it != dependPaths.end(); it++)
-			{
-				output << " " << *it;
-			}
-			output << std::endl;
+			writeList(basePath, dependPaths, "DEPENDPATH", device, " += . ");
+			writeList(basePath, dependPaths, "INCLUDEPATH", device, " += . ");
 		}
 
 		if( !modules.empty() )
 		{
-			std::string qtAdd, qtSub;
+			QString qtAdd, qtSub;
 
-			for(stringList::iterator it = modules.begin(); it != modules.end(); it++)
+			for(QStringList::iterator it = modules.begin(); it != modules.end(); it++)
 			{
 				if( (*it)[0] == '+' )
 				{
 					qtAdd.append( " " );
-					qtAdd.append( (*it).substr(1) );
+					qtAdd.append( (*it).mid(1) );
 				}
 
 				if( (*it)[0] == '-' )
 				{
 					qtSub.append( " " );
-					qtSub.append( (*it).substr(1) );
+					qtSub.append( (*it).mid(1) );
 				}
 			}
 
-			if( !qtAdd.empty() )
+			if( !qtAdd.isEmpty() )
 			{
-				output << "QT +=" << qtAdd << std::endl;
+				textStream << "QT +=" << qPrintable(qtAdd) << "\n";
 			}
-			if( !qtSub.empty() )
+			if( !qtSub.isEmpty() )
 			{
-				output << "QT -=" << qtSub << std::endl;
+				textStream << "QT -=" << qPrintable(qtSub) << "\n";
 			}
-			//output << "QT += " << modules << std::endl;
 		}
 
 		if( !libDirs.empty() || !libs.empty() )
 		{
-			output << "LIBS +=";
+			textStream << "LIBS +=";
 
-			for(stringList::iterator it = libDirs.begin(); it != libDirs.end(); it++)
+			for(QStringList::iterator it = libDirs.begin(); it != libDirs.end(); it++)
 			{
-				output << " -L" << *it;
+				textStream << " -L" << qPrintable(*it);
 			}
 
-			for(stringList::iterator it = libs.begin(); it != libs.end(); it++)
+			for(QStringList::iterator it = libs.begin(); it != libs.end(); it++)
 			{
-				output << " -l" << *it;
+				textStream << " -l" << qPrintable(*it);
 			}
 
-			output << std::endl;
+			textStream << "\n";
 		}
+		
+		textStream.flush();
 
 		if( !qrcFiles.empty() )
 		{
-			writeList(qrcFiles, "RESOURCES", output.rdbuf());
+			writeList(basePath, qrcFiles, "RESOURCES", textStream.device());
 		}
 
 		if( !headerFiles.empty() )
 		{
-			writeList(headerFiles, "HEADERS", output.rdbuf());
+			writeList(basePath, headerFiles, "HEADERS", textStream.device());
 		}
 
 		if( !sourceFiles.empty() )
 		{
-			writeList(sourceFiles, "SOURCES", output.rdbuf());
+			writeList(basePath, sourceFiles, "SOURCES", textStream.device());
 		}
 
 		if( !uicFiles.empty() )
 		{
-			writeList(uicFiles, "FORMS", output.rdbuf());
+			writeList(basePath, uicFiles, "FORMS", textStream.device());
 		}
 	}
 	else
 	{
-		output << " error: no project relevant files found!" << std::endl;
-		output << " please make sure that there are *.cpp, *.h, *.uic, *.rc or *.qrc" << std::endl;
-		output << "   in the given directory!" << std::endl;
+		textStream << " error: no project relevant files found!" << "\n";
+		textStream << " please make sure that there are *.cpp, *.h, *.uic, *.rc or *.qrc" << "\n";
+		textStream << "   in the given directory!" << "\n";
 	}
 }
 

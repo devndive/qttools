@@ -1,19 +1,21 @@
 #include "create_module_vector.h"
+#include "definitions.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QList>
 #include <QtCore/QStringList>
-
-#include <iostream>
-#include <fstream>
+#include <QtCore/QTextStream>
 
 namespace PFG
 {
 
-void createModuleVector( std::vector< stringList > &moduleVector, bool shortModules)
+void createModuleVector(QList<QStringList>& moduleVector, bool shortModules)
 {
 	// Modulefiles will be in modules subdir. This should be configurable in future
-	QDir moduleBasePath("./modules/");
+	// now we expect, that the modules-folder is right next to the application it self
+	QDir moduleBasePath(QCoreApplication::applicationDirPath().append("/modules/"));
 
 	// Check if moduleBasePath exists and is directory
 	if( moduleBasePath.exists() )
@@ -38,20 +40,29 @@ void createModuleVector( std::vector< stringList > &moduleVector, bool shortModu
 		// get the filelist
 		QFileInfoList fileList = moduleBasePath.entryInfoList();
 
-
 		for (int i = 0; i < fileList.count(); ++i)
 		{
-			std::ifstream file( qPrintable(fileList.at(i).filePath()) );
-			stringList includes;
-		
-			while(file)
-			{
-				std::string line;
-				std::getline(file, line);
-				addToStringList(includes, line);
-			}
+			QFile file(fileList.at(i).filePath());
 			
-			moduleVector.push_back( includes );
+			// get module name from filename
+			QString moduleName = fileList.at(i).baseName().split('_')[0];
+			
+			if(file.open(QFile::ReadOnly))
+			{
+				QTextStream textStream(&file);
+				QStringList includes;
+				
+				// the module name is always the first entry in the list
+				includes.push_back(moduleName);
+
+				while(!file.atEnd())
+				{
+					addToStringList(includes, textStream.readLine());
+				}
+			
+				moduleVector.push_back( includes );
+				file.close();
+			}
 		}
 	}
 }

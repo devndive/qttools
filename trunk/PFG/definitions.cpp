@@ -1,17 +1,17 @@
 #include "definitions.h"
 
-#include <algorithm>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 namespace PFG
 {
 
-void addToStringList(stringList &list, const std::string &toAdd)
-{
-	if( toAdd.size() > 0 )
-	{
-		stringList::iterator result = std::find(list.begin(), list.end(), toAdd);
-
-		if( result == list.end() )
+void addToStringList(QStringList& list, QString toAdd)
+{	
+	if( !toAdd.isEmpty() )
+	{		
+		int index = list.indexOf( toAdd );
+		if( index == -1 )
 		{
 			list.push_back(toAdd);
 		}

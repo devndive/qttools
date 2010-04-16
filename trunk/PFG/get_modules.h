@@ -1,13 +1,13 @@
 #ifndef __GET_MODULES_STRING_H__
 #define __GET_MODULES_STRING_H__
 
-#include <string>
-#include "definitions.h"
+class QString;
+class QStringList;
 
 namespace PFG
 {
 
-void getModules(stringList &includes, stringList &modules, bool useShortModules = false);
+void getModules(QStringList& includes, QStringList& modules, bool useShortModules = false);
 
 } // namespace PFG
 

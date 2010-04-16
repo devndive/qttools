@@ -1,12 +1,14 @@
 #ifndef __CREATE_MODULE_VECTOR_H__
 #define __CREATE_MODULE_VECTOR_H__
 
-#include "definitions.h"
+template <typename T>
+class QList;
+class QStringList;
 
 namespace PFG
 {
 
-void createModuleVector( std::vector< stringList > &moduleVectorShort, bool shortModules );
+void createModuleVector( QList<QStringList> &moduleVectorShort, bool shortModules );
 
 }
 

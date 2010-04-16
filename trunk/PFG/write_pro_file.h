@@ -1,14 +1,18 @@
 #ifndef __WRITE_PRO_FILE_H__
 #define __WRITE_PRO_FILE_H__
 
-#include <string>
-#include <iostream>
-#include "definitions.h"
+#include <QtCore/QFileInfo>
+
+class QString;
+class QStringList;
+class QTextStream;
+class QIODevice;
 
 namespace PFG
 {
 
-void writeProFile(stringList &headerFiles, stringList &sourceFiles, stringList &qrcFiles, stringList &uicFiles, stringList &dependPaths, stringList &modules, std::string &templateType, std::string &target, std::streambuf *sbuf, stringList &libDirs, stringList &libs);
+void writeList(QDir basePath, QFileInfoList listToWrite, const QString &prefix, QIODevice *device, const QString &appender = " = ");
+void writeProFile(QDir basePath, QFileInfoList headerFiles, QFileInfoList sourceFiles, QFileInfoList qrcFiles, QFileInfoList uicFiles, QFileInfoList dependPaths, QStringList modules, QString &templateType, QString &target, QIODevice *device, QStringList libDirs, QStringList libs);
 
 } // namespace PFG
 
