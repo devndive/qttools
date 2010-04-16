@@ -1,13 +1,15 @@
 #ifndef __GET_ALL_FILES_H__
 #define __GET_ALL_FILES_H__
 
-#include <string>
-#include "definitions.h"
+#include <QtCore/QFileInfo>
+
+class QString;
+class QStringList;
 
 namespace PFG
 {
 
-void getAllFiles(const std::string &path, stringList &hFiles, stringList &cppFiles, stringList &qrcFiles, stringList &uicFiles, stringList &dependPaths);
+void getAllFiles(const QString path, QFileInfoList& hFiles, QFileInfoList& cppFiles, QFileInfoList& qrcFiles, QFileInfoList& uicFiles, QFileInfoList& dependPaths);
 
 } // namespace PFG
 

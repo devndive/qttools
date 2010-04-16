@@ -1,13 +1,15 @@
 #ifndef __GET_ALL_INCLUDES_H__
 #define __GET_ALL_INCLUDES_H__
 
-#include <string>
-#include "definitions.h"
+#include <QtCore/QFileInfo>
+
+class QString;
+class QStringList;
 
 namespace PFG
 {
 
-void getAllIncludes(std::string &path, stringList &h_files, stringList &cpp_files, stringList &includes);
+void getAllIncludes(QString path, QFileInfoList h_files, QFileInfoList cpp_files, QStringList& includes);
 
 } // namespace PFG
 

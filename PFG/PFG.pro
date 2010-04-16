@@ -1,9 +1,8 @@
 # building an application
 TEMPLATE = app
 
-# build a debug version so we can debug ;)
 # using the qt flag so that we can leave out the gui libs
-CONFIG = console qt debug
+CONFIG = console qt debug_and_release
 
 # we do not need the gui here
 QT -= gui
